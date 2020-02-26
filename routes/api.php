@@ -19,5 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //Route::group(['prefix'=>'/api'],function (){
 //
 //});
-Route::post("/search/","MainController@apiSearchWithoutRequest");
-Route::post("/webhooks","WebhookController@main");
+Route::post("/search/", "MainController@apiSearchWithoutRequest")->middleware("addHeader");
+Route::post("/webhooks", "WebhookController@main");

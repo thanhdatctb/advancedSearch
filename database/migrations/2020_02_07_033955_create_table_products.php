@@ -14,12 +14,12 @@ class CreateTableProducts extends Migration
     public function up()
     {
         Schema::create('table_products', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string("name");
             $table->longText("Description", 1000);
-            $table->string("context");
-            $table->string("domain");
+            $table->string("context")->references("table_install_infor.context")->on("table_install_infor");
             $table->string("url");
             $table->string("image_url");
         });

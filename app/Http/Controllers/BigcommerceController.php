@@ -69,9 +69,9 @@ class BigcommerceController extends ApiController
         $data = base64_decode(explode(".", $signedPayload)[0]);
         return json_decode($data, true)["context"];
     }
+
     public function install(Request $request)
     {
-
         if (!$request->has('code') || !$request->has('scope') || !$request->has('context')) {
             return "Can't install app";
         }
@@ -153,6 +153,6 @@ class BigcommerceController extends ApiController
     public function uninstall(Request $request)
     {
         $context = $this->getContext($request);
-        DB::table("table_install_infor")->where("context","=",$context)->delete();
+        DB::table("table_install_infor")->where("context", "=", $context)->delete();
     }
 }

@@ -14,11 +14,12 @@ class CreateTableKeyword extends Migration
     public function up()
     {
         Schema::create('table_keyword', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->timestamps();
             $table->dateTime("search_at");
-            $table->string("key_word",1000);
-            $table->string("domain");
+            $table->string("key_word", 1000);
+            $table->string("context")->references("table_install_infor.context")->on("table_install_infor");
         });
     }
 

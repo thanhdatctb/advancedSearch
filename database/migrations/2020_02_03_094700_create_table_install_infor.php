@@ -14,17 +14,19 @@ class CreateTableInstallInfor extends Migration
     public function up()
     {
         Schema::create('table_install_infor', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string("clientId");
             $table->string("clientSecret");
-            $table->string("code",1000);
-            $table->string("scope",1000);
-            $table->string("context");
+            $table->string("code", 1000);
+            $table->string("scope", 1000);
+            $table->string("context")->index();
             $table->string("accessToken");
             $table->string("userId");
             $table->string("username");
             $table->string("email");
+            $table->string("domain");
         });
 
     }

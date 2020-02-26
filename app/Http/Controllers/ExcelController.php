@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\KeywordExport;
 use App\Helper\ExcelHelper;
+use App\Http\Middleware\AddHeader;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 

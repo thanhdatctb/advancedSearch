@@ -20,7 +20,7 @@
     function ajaxSearch()
     {
         $.ajax({
-            url: "https://11eb3895.ngrok.io/api/search",
+            url: "https://cfc968fd.ngrok.io/api/search",
             type: "post",
             dataType: "json",
             data: {
