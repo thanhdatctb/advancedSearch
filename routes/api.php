@@ -21,3 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //});
 Route::post("/search/", "MainController@apiSearchWithoutRequest")->middleware("addHeader");
 Route::post("/webhooks", "WebhookController@main");
+Route::post("/keywords", "KeywordController@apiGetAllKeyword")->middleware("addHeader");
+Route::post("/updateConfig", "ConfigController@updateConfig")->middleware("addHeader");

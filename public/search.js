@@ -6,25 +6,24 @@
     $(document).ready(function () {
         // document.getElementById("myDropdown").classList.toggle("show");
         canSearch = true;
-        $("#search_query").keyup("input",function () {
+        $("#search_query").keyup("input", function () {
             //console.log(canSearch);
-            if(canSearch)
-            {
+            if (canSearch) {
                 ajaxSearch();
-                setTimeout(function(){
+                setTimeout(function () {
                     canSearch = true;
-                } , 3);
+                }, 3);
             }
         });
     });
-    function ajaxSearch()
-    {
+
+    function ajaxSearch() {
         $.ajax({
-            url: "https://cfc968fd.ngrok.io/api/search",
+            url: "127.0.0.1:8000/api/search",
             type: "post",
             dataType: "json",
             data: {
-                "url": getUrl(),
+                "url": "https://dat-smartosc-sandbox.mybigcommerce.com/",
                 "keyword": $("#search_query").val(),
             },
             success: function (result) {
@@ -36,20 +35,21 @@
                 foreachProducts(products);
                 foreachBlogs(blogs);
                 foreachCategories(categories);
-             },
+            },
             error: function (result) {
                 console.log(result);
             }
         });
         canSearch = false;
     }
+
     function foreachBlogs(blogs) {
         for (var i = 0; i < blogs.length; i++) {
             item = blogs[i];
             //console.log(item);
             //document.getElementById("test").innerHTML = item;
             //document.getElementById("blogs").innerHTML += "<a href='#'>"+item['title']+"</a>";
-            var html  = `
+            var html = `
                          <center><a href="${item["url"]}" style="text-decoration: none;">
                             <div class="form-input" style="width: 390px;">
                                 ${item['title']} - ${item['author']}
@@ -59,10 +59,11 @@
 
         }
     }
+
     function foreachProducts(products) {
         for (var i = 0; i < products.length; i++) {
             item = products[i];
-            var html =  `<center><a href="${item["url"]}" style="text-decoration: none;">
+            var html = `<center><a href="${item["url"]}" style="text-decoration: none;">
                             <div class="product form-input" style="width: 390px">
                                 <img src="${item["image_url"]}"/>
                                 ${item['name']}
@@ -71,6 +72,7 @@
             document.getElementsByClassName("quickSearchResults")[0].innerHTML += html;
         }
     }
+
     function foreachCategories(categories) {
         for (var i = 0; i < categories.length; i++) {
             item = categories[i]["attributes"];
@@ -86,8 +88,8 @@
             document.getElementsByClassName("quickSearchResults")[0].innerHTML += html;
         }
     }
-    function getUrl()
-    {
+
+    function getUrl() {
         return window.location.href;
     }
 }

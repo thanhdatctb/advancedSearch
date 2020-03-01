@@ -7,6 +7,7 @@ use App\Helper\CategoryHelper;
 use App\Helper\KeywordHelper;
 use App\Helper\MainHelper;
 use App\Helper\ProductHelper;
+use App\Helper\ResultConfigHelper;
 use App\Helper\ScriptHelper;
 use App\Helper\StoreHelper;
 use App\Helper\WebhookHelper;
@@ -27,6 +28,7 @@ class BigcommerceController extends ApiController
     private $keywordHelper;
     private $webhookHelper;
     private $scriptHelper;
+    private $resultConfigHelper;
 
     public function __construct()
     {
@@ -38,6 +40,7 @@ class BigcommerceController extends ApiController
         $this->keywordHelper = new KeywordHelper();
         $this->webhookHelper = new WebhookHelper();
         $this->scriptHelper = new ScriptHelper();
+        $this->resultConfigHelper = new ResultConfigHelper();
     }
 
     private function getAppClientId()
@@ -87,8 +90,11 @@ class BigcommerceController extends ApiController
                 'context' => $request->input('context'),
             ]
         ]);
-
         $data = json_decode($result->getBody(), true);
+        $myParam["clientId"] = $this->getAppClientId();
+        $myParam["access_token"] = $data["access_token"];
+        $myParam["context"] = $data["context"];
+        $domain = $this->storeHelper->getStoreInfor($myParam)["domain"];
         DB::table("table_install_infor")->insert([
             "accessToken" => $data["access_token"],
             "scope" => $data["scope"],
@@ -98,15 +104,17 @@ class BigcommerceController extends ApiController
             "userId" => $data["user"]["id"],
             "username" => $data["user"]["username"],
             "email" => $data["user"]["email"],
-            "context" => $data["context"]
+            "context" => $data["context"],
+            "domain" => $domain,
         ]);
         if ($result->getStatusCode() == 200) {
             $context = $data['context'];
-            $param = $this->mainHelper->getInfFromContext($context);
+            $param = MainHelper::getInfData("context", $context);
             $request->session()->put('param', $param);
             $this->webhookHelper->createAllWebhook($param);
             $this->scriptHelper->createJqueryScript($param);
             $this->scriptHelper->createSearchScript($param);
+            $this->resultConfigHelper->addConfigResult($param, 6);
             $this->backUp($request);
             return redirect("/");
         } else {
@@ -118,7 +126,7 @@ class BigcommerceController extends ApiController
     public function load(Request $request)
     {
         $context = $this->getContext($request);
-        $param = $this->mainHelper->getInfFromContext($context);
+        $param = $this->mainHelper->getInfData("context", $context);
         $request->session()->put('param', $param);
         return redirect(("/"));
     }

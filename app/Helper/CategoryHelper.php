@@ -58,8 +58,6 @@ class CategoryHelper extends ApiHelper
 
     public function backUp($param)
     {
-
-        //$domain = $this->storeHelper->getStoreInfor($param)["domain"];
         $categories = $this->viewAll($param);
         foreach ($categories as $category) {
             $this->insertWithId($param, $category->getId());
@@ -68,7 +66,6 @@ class CategoryHelper extends ApiHelper
 
     public function insertWithId($param, $id)
     {
-        $domain = $this->storeHelper->getStoreInfor($param)["domain"];
         $category = $this->getById($param, $id);
         DB::table("table_category")->insert([
             "id" => $category->getId(),
@@ -77,7 +74,6 @@ class CategoryHelper extends ApiHelper
             "url" => $category->getUrl(),
             "image_url" => $category->getImageUrl(),
             "context" => $param["context"],
-            "domain" => $domain,
         ]);
     }
 
@@ -106,12 +102,13 @@ class CategoryHelper extends ApiHelper
 
     public function searchWithoutRequest($domain, $keyword)
     {
+        $context = MainHelper::getInfData("domain", $domain)["context"];
         return Category::where([
-            ["domain", "=", $domain],
+            ["context", "=", $context],
             ["title", "like", "%" . $keyword . "%"]
         ])
             ->orWhere([
-                ["domain", "=", $domain],
+                ["context", "=", $context],
                 ["description", "like", "%" . $keyword . "%"]
             ])->get();
     }

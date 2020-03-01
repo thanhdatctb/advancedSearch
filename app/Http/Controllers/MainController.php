@@ -17,14 +17,8 @@ class MainController extends Controller
 
     public function apiSearchWithoutRequest(Request $request)
     {
-        $domain = $this->formatDomain($request->url);
+        $domain = MainHelper::formatDomain($request->url);
         return $this->mainHelper->searchWithoutRequest($domain, $request->keyword);
-    }
-
-    private function formatDomain($url)
-    {
-        $parse = parse_url($url);
-        return $parse['host'];
     }
 
     public function webhook(Request $request)

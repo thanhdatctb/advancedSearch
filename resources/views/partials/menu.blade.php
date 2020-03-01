@@ -82,11 +82,14 @@
                     </ul>
                 </li>
                 <li class="nav-item has-treeview">
+                    <a href="/config" class="nav-link">
+                        <i class="nav-icon fas fa-cog" aria-hidden="true"></i>
+                        <p>Configuration</p>
+                    </a>
+                <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class=" nav-icon fa fa-user" aria-hidden="true"></i>
-                        <p>
-                            About us
-                        </p>
+                        <p>About us</p>
                     </a>
                 </li>
             </ul>

@@ -87,7 +87,6 @@ class BlogHelper extends ApiHelper
             "author" => $blog->getAuthor(),
             "url" => $blog->getUrl(),
             "context" => $param["context"],
-            "domain" => $domain,
         ]);
     }
 
@@ -126,20 +125,21 @@ class BlogHelper extends ApiHelper
 
     public function searchWithoutRequest($domain, $keyword)
     {
+        $context = MainHelper::getInfData("domain", $domain)["context"];
         return Blog::where([
-            ["domain", "=", $domain],
+            ["context", "=", $context],
             ["title", "like", "%" . $keyword . "%"]
         ])
             ->orWhere([
-                ["domain", "=", $domain],
+                ["context", "=", $context],
                 ["body", "like", "%" . $keyword . "%"]
             ])
             ->orWhere([
-                ["domain", "=", $domain],
+                ["context", "=", $context],
                 ["summary", "like", "%" . $keyword . "%"]
             ])
             ->orWhere([
-                ["domain", "=", $domain],
+                ["context", "=", $context],
                 ["author", "like", "%" . $keyword . "%"]
             ])
             ->get();

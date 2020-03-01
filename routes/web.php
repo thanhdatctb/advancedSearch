@@ -25,3 +25,5 @@ Route::get("/report", "ReportController@index");
 
 Route::get("/ExportKeywordDetail", "ExcelController@exportKeywordDetail");
 Route::get("/ExportKeywordCount", "ExcelController@exportKeywordCount");
+Route::get("/result/{domain}/{type}/{keyword}/{limit?}/{page?}", "ResultController@getReult");
+Route::get("/config", "ConfigController@index");

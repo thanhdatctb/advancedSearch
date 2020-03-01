@@ -44,7 +44,7 @@ class BackupBlog extends Command
         $blogHelper = new BlogHelper();
         $dataContexts = DB::table("table_install_infor")->select("context")->get();
         foreach ($dataContexts as $dataContext) {
-            $param = $mainHelper->getInfFromContext($dataContext->context);
+            $param = $mainHelper->getInfData($dataContext->context);
             $blogHelper->deleteOldData($param);
             $blogHelper->backUp($param);
         }

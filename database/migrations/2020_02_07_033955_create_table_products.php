@@ -20,6 +20,7 @@ class CreateTableProducts extends Migration
             $table->string("name");
             $table->longText("Description", 1000);
             $table->string("context")->references("table_install_infor.context")->on("table_install_infor");
+            $table->double("price");
             $table->string("url");
             $table->string("image_url");
         });

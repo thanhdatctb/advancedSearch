@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Keyword extends Model
 {
     //
-    private $keyword;
-    private $count;
+    public $keyword;
+    public $count;
     protected $table="table_keyword_count";
     /**
      * @return mixed

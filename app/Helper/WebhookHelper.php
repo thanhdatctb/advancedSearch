@@ -18,7 +18,7 @@ class WebhookHelper extends ApiHelper
 
     public function __construct()
     {
-        Parent::__construct();
+        parent::__construct();
 //        $this->param = $param;
 
         $this->mainHelper = new MainHelper();
@@ -27,23 +27,23 @@ class WebhookHelper extends ApiHelper
         $this->productHelper = new ProductHelper();
     }
 
-    private function createWebhook($scope,$param)
+    private function createWebhook($scope, $param)
     {
-        $url = "https://api.bigcommerce.com/".$param["context"]."/v2/hooks";
+        $url = "https://api.bigcommerce.com/" . $param["context"] . "/v2/hooks";
         return $result = $this->client->request("post", $url, [
-                "headers" => Constance::getHeader($param),
-                "json" => [
-                    "scope" => $scope,
-                    "destination" => env("NGROK_URL") . "api/webhooks",
-                    "is_active" => true
-                ]
-            ])->getBody()->getContents();
+            "headers" => Constance::getHeader($param),
+            "json" => [
+                "scope" => $scope,
+                "destination" => env("NGROK_URL") . "api/webhooks",
+                "is_active" => true
+            ]
+        ])->getBody()->getContents();
     }
 
     public function createAllWebhook($param)
     {
-        $this->createWebhook("store/product/*",$param);
-        $this->createWebhook("store/category/*",$param);
+        $this->createWebhook("store/product/*", $param);
+        $this->createWebhook("store/category/*", $param);
     }
 
     public function updateDB(Request $request)
@@ -51,7 +51,7 @@ class WebhookHelper extends ApiHelper
 
         $id = $request->data["id"];
         $context = $request->producer;
-        $param = $this->mainHelper->getInfFromContext($context);
+        $param = $this->mainHelper->getInfData($context);
         $scopeData = explode("/", $request->scope);
         if ($scopeData[1] == "product") {
             if ($scopeData[2] == "deleted") {

@@ -44,10 +44,7 @@ class ProductHelper extends ApiHelper
 
     private function insertWithId($param, $id)
     {
-
-        $domain = $this->storeHelper->getStoreInfor($param)["domain"];
         $product = $this->getById($param, $id);
-        Log::info(print_r($product->getImage(), true));
         try {
             sizeof($product->getImage());
             $tiny_url = $product->getImage()[0]["tiny_url"];
@@ -61,7 +58,7 @@ class ProductHelper extends ApiHelper
             "url" => $product->getUrl(),
             "image_url" => $tiny_url,
             "context" => $param["context"],
-            "domain" => $domain,
+            "price" => $product->getPrice()
         ]);
     }
 
@@ -109,12 +106,13 @@ class ProductHelper extends ApiHelper
 
     public function searchWithoutRequest($domain, $keyword)
     {
+        $context = MainHelper::getInfData("domain", $domain)["context"];
         return DB::table("table_products")->select()->where([
-            ["domain", "=", $domain],
+            ["context", "=", $context],
             ["name", "like", "%" . $keyword . "%"]
         ])
             ->orWhere([
-                ["domain", "=", $domain],
+                ["context", "=", $context],
                 ["Description", "like", "%" . $keyword . "%"]
             ])->get();
     }
