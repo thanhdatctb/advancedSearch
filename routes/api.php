@@ -23,3 +23,4 @@ Route::post("/search/", "MainController@apiSearchWithoutRequest")->middleware("a
 Route::post("/webhooks", "WebhookController@main");
 Route::post("/keywords", "KeywordController@apiGetAllKeyword")->middleware("addHeader");
 Route::post("/updateConfig", "ConfigController@updateConfig")->middleware("addHeader");
+Route::post("/addTag", "TagController@apiAddTag");

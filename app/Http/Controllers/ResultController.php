@@ -10,6 +10,7 @@ class ResultController extends Controller
     //
     private $mainHelper;
     private $resultConfigHelper;
+
     public function __construct()
     {
         $this->mainHelper = new MainHelper();
@@ -22,16 +23,20 @@ class ResultController extends Controller
         $limitDefault = $this->resultConfigHelper->getResultsPerPage($param);
         $limit = null == $limit ? $limitDefault : $limit;
         $data = $this->mainHelper->searchWithoutRequest($domain, $keyword)[$type];
-        $outputData = $data->chunk($limit)->toArray()[$page - 1];
         $viewData = [
             "type" => $type,
-            "data" => $outputData,
+            "data" => null,
             "domain" => $domain,
             "keyword" => $keyword,
             "page" => $page,
             "limit" => $limit,
             "pages" => ceil(sizeof($data) / $limit)
         ];
+        if (sizeof($data) == 0) {
+            return view("partials/resultHeader", $viewData );
+        }
+        $outputData = $data->chunk($limit)->toArray()[$page - 1];
+        $viewData["data"] = $outputData;
         switch ($type) {
             case "categories":
             {

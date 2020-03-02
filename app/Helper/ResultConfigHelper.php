@@ -19,9 +19,13 @@ class ResultConfigHelper
 
     public function editConfigResult($context, $resultsPerPage)
     {
-        return DB::table("table_result_config")->where("context", "=", $context)->update([
-            "resultsPerPage" => $resultsPerPage
-        ]);
+        if ($resultsPerPage > 0) {
+            return DB::table("table_result_config")->where("context", "=", $context)->update([
+                "resultsPerPage" => $resultsPerPage
+            ]);
+        } else {
+            throw new \Exception("Result Page isn't valid");
+        }
     }
 
     public function getResultsPerPage($param)

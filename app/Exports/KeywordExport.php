@@ -20,7 +20,7 @@ class KeywordExport implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        return Keyword::where("domain","=",$this->param["domain"])->select()->get();
+        return Keyword::where("context","=",$this->param["context"])->select()->get();
     }
     public function headings(): array
     {
@@ -30,7 +30,7 @@ class KeywordExport implements FromCollection, WithHeadings
             'update at',
             'keyword',
             'count',
-            'domain'
+            'context'
         ];
     }
 }

@@ -19,7 +19,7 @@ class KeyworDetailExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        return KeywordDetail::where("domain","=",$this->param["domain"])->select()->get();
+        return KeywordDetail::where("context","=",$this->param["context"])->select()->get();
     }
 
     /**
@@ -34,7 +34,7 @@ class KeyworDetailExport implements FromCollection, WithHeadings
             'update at',
             'search at',
             'keyword',
-            'domain'
+            'context'
         ];
     }
 }
