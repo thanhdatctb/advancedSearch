@@ -4,6 +4,7 @@ namespace App\Helper;
 
 use App\Model\Constance;
 use App\Model\Product;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProductHelper extends ApiHelper
 {
+    use ItemHelper;
     //
     private $storeHelper;
 
@@ -38,7 +40,7 @@ class ProductHelper extends ApiHelper
     {
         $products = $this->viewAll($param);
         foreach ($products as $product) {
-            $this->insertWithId($param, $product->getId());
+            $this->backUpWithId($param, $product->getId());
         }
     }
 
@@ -48,7 +50,7 @@ class ProductHelper extends ApiHelper
         try {
             sizeof($product->getImage());
             $tiny_url = $product->getImage()[0]["tiny_url"];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $tiny_url = "";
         }
         DB::table("table_products")->insert([
@@ -64,8 +66,19 @@ class ProductHelper extends ApiHelper
 
     public function backUpWithId($param, $id)
     {
-        Product::where("id", "=", $id)->delete();
-        $this->insertWithId($param, $id);
+//        Product::where("id", "=", $id)->delete();
+//        $this->insertWithId($param, $id);
+        $product = $this->getById($param, $id);
+        DB::table("table_products")
+            ->where("id", "=", $id)
+            ->update([
+                "name" => $product->getName(),
+                "Description" => strip_tags($product->getDescription()),
+                "url" => $product->getUrl(),
+                "image_url" => $product->getImage()[0]["tiny_url"],
+                "context" => $param["context"],
+                "price" => $product->getPrice()
+            ]);
     }
 
     public function deleteOldData($param)
@@ -104,17 +117,32 @@ class ProductHelper extends ApiHelper
         return $products;
     }
 
-    public function searchWithoutRequest($domain, $keyword)
+    public function searchWithoutTag($domain, $keyword)
     {
         $context = MainHelper::getInfData("domain", $domain)["context"];
-        return DB::table("table_products")->select()->where([
-            ["context", "=", $context],
-            ["name", "like", "%" . $keyword . "%"]
-        ])
+        return DB::table("table_products")
+            ->select()->where([
+                ["table_products.context", "=", $context],
+                ["table_products.name", "like", "%" . $keyword . "%"]
+            ])
             ->orWhere([
-                ["context", "=", $context],
-                ["Description", "like", "%" . $keyword . "%"]
-            ])->get();
+                ["table_products.context", "=", $context],
+                ["table_products.Description", "like", "%" . $keyword . "%"]
+            ])
+            ->get();
+    }
+
+    public function searchWithTag($domain, $keyword)
+    {
+        $context = MainHelper::getInfData("domain", $domain)["context"];
+        return DB::table("table_products")
+            ->join("table_product_tags", "table_products.id", "=", "table_product_tags.foreign_id")
+            ->orWhere([
+                ["table_products.context", "=", $context],
+                ["table_product_tags.tag", "=", $keyword],
+            ])
+            ->select("table_products.*")
+            ->distinct("table_products.id")->get();
     }
 
     private function putAllValueProduct($param, $productData)

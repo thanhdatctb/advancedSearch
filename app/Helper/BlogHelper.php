@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class BlogHelper extends ApiHelper
 {
+
+    use ItemHelper;
     //
+
     private $storeHelper;
 
     public function __construct()
@@ -28,7 +31,6 @@ class BlogHelper extends ApiHelper
         foreach ($blogsData as $blogData) {
             $blog = $this->putAllValueToBlog($blogData);
             array_push($blogs, $blog);
-
         }
         return ($blogs);
     }
@@ -58,7 +60,6 @@ class BlogHelper extends ApiHelper
 
     private function putDBValueToBlog($blogData)
     {
-
         $blog = new Blog();
         $blog->setAuthor($blogData["author"]);
         $blog->setBody($blogData["body"]);
@@ -71,7 +72,7 @@ class BlogHelper extends ApiHelper
     {
         $blogs = $this->viewAll($param);
         foreach ($blogs as $blog) {
-            $this->insertWithId($param, $blog->getId());
+            $this->updateWithId($param, $blog->getId());
         }
     }
 
@@ -88,6 +89,21 @@ class BlogHelper extends ApiHelper
             "url" => $blog->getUrl(),
             "context" => $param["context"],
         ]);
+    }
+
+    public function updateWithId($param, $id)
+    {
+        $blog = $this->getById($param, $id);
+        DB::table("table_blogs")
+            ->where("id", "=", $blog->getId())
+            ->insert([
+                "title" => $blog->getTitle(),
+                "body" => strip_tags($blog->getBody()),
+                "summary" => strip_tags($blog->getSummary()),
+                "author" => $blog->getAuthor(),
+                "url" => $blog->getUrl(),
+                "context" => $param["context"],
+            ]);
     }
 
     public function deleteOldData($param)
@@ -123,25 +139,37 @@ class BlogHelper extends ApiHelper
         return $blogs;
     }
 
-    public function searchWithoutRequest($domain, $keyword)
+    public function searchWithoutTag($domain, $keyword)
     {
         $context = MainHelper::getInfData("domain", $domain)["context"];
-        return Blog::where([
-            ["context", "=", $context],
-            ["title", "like", "%" . $keyword . "%"]
-        ])
-            ->orWhere([
-                ["context", "=", $context],
-                ["body", "like", "%" . $keyword . "%"]
+        return DB::table("table_blogs")
+            ->where([
+                ["table_blogs.context", "=", $context],
+                ["table_blogs.title", "like", "%" . $keyword . "%"]
             ])
             ->orWhere([
-                ["context", "=", $context],
-                ["summary", "like", "%" . $keyword . "%"]
+                ["table_blogs.context", "=", $context],
+                ["table_blogs.body", "like", "%" . $keyword . "%"]
             ])
             ->orWhere([
-                ["context", "=", $context],
-                ["author", "like", "%" . $keyword . "%"]
+                ["table_blogs.context", "=", $context],
+                ["table_blogs.summary", "like", "%" . $keyword . "%"]
             ])
+            ->orWhere([
+                ["table_blogs.context", "=", $context],
+                ["table_blogs.author", "like", "%" . $keyword . "%"]
+            ])
+            ->select("table_blogs.*")
+            ->distinct("table_blog_tags.foreign_id")
+            ->get();
+    }
+
+    public function searchWithTag($domain, $keyword)
+    {
+        return DB::table("table_blogs")
+            ->join("table_blog_tags", "table_blog_tags.foreign_id", "=", "table_blogs.id")
+            ->select("table_blogs.*")
+            ->distinct("table_blog_tags.foreign_id")
             ->get();
     }
 }

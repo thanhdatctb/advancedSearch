@@ -50,7 +50,7 @@ class KeywordHelper extends ApiHelper
 
     public function getLimitKeyword($limit, $param)
     {
-        return Keyword::where("domain", "=", $param["domain"])
+        return Keyword::where("context", "=", $param["context"])
             ->where("key_word", "!=", "")
             ->orderBy("count", "DESC")
             ->take($limit)->get();
@@ -58,7 +58,7 @@ class KeywordHelper extends ApiHelper
 
     public function getTotalKeyword($param)
     {
-        return Keyword::where("domain", "=", $param["domain"])->sum("count");
+        return Keyword::where("context", "=", $param["context"])->sum("count");
     }
 
     public function getTodayKeywordCount($param, $keyword)

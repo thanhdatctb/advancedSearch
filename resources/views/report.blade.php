@@ -270,7 +270,7 @@
                 {
                     data: [
                         @foreach($keywords as $keyword)
-                            {{$keyword->count}},
+                            {{$keyword["count"]}},
                         @endforeach
                     ],
                     backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
@@ -313,7 +313,7 @@
         var barChartData = {
             labels  : [
                 @foreach($top10Keyword as $keyword)
-                    '{{$keyword->key_word}}',
+                    '{{$keyword["key_word"]}}',
                 @endforeach
             ],
             datasets: [
@@ -328,7 +328,7 @@
                     pointHighlightStroke: 'rgba(60,141,188,1)',
                     data                : [
                         @foreach($top10Keyword as $keyword)
-                        {{$keyword->count}},
+                        '{{$keyword["count"]}}',
                         @endforeach
                     ]
                 },
@@ -343,7 +343,7 @@
                     pointHighlightStroke: 'rgba(220,220,220,1)',
                     data                : [
                         @foreach($top10KeywordToday as $keyword)
-                        {{$keyword->count}},
+                        {{$keyword["count"]}},
                         @endforeach
                     ]
                 },
@@ -391,7 +391,7 @@
                     pointHighlightStroke: 'rgba(60,141,188,1)',
                     data                : [
                         @foreach($top10Keyword as $keyword)
-                        {{$keyword->count}},
+                        {{$keyword["count"]}},
                         @endforeach
                     ]
                 },

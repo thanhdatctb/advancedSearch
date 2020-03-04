@@ -48,7 +48,6 @@ class WebhookHelper extends ApiHelper
 
     public function updateDB(Request $request)
     {
-
         $id = $request->data["id"];
         $context = $request->producer;
         $param = $this->mainHelper->getInfData($context);

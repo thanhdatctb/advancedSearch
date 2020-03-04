@@ -26,7 +26,7 @@ class MainHelper extends ApiHelper
 
     public function backup($param)
     {
-        $this->deleteOldData($param);
+        //$this->deleteOldData($param);
         $this->productHelper->backUp($param);
         $this->categoryHelper->backUp($param);
         $this->blogHelper->backUp($param);

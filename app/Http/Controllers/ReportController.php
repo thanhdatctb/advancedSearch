@@ -34,12 +34,12 @@ class ReportController extends Controller
         $others->setAttribute("count", $this->keywordHelper->getTotalKeyword($param) - $sum);
         $keywords->push($others);
         $top10KeywordToday = array();
-        foreach ($top10Keyword as $keyword)
-        {
+        foreach ($top10Keyword as $keyword) {
             $todayKeyword = new Keyword();
-            $todayKeyword->setAttribute("key_word",$keyword->key_word);
-            $todayKeyword->setAttribute("count",$this->keywordHelper->getTodayKeywordCount($param, $keyword->key_word));
-            array_push($top10KeywordToday,$todayKeyword);
+            $todayKeyword->setAttribute("key_word", $keyword->key_word);
+            $todayKeyword->setAttribute("count", $this->keywordHelper
+                ->getTodayKeywordCount($param, $keyword->key_word));
+            array_push($top10KeywordToday, $todayKeyword);
         }
         return view("report", [
             "store" => $storeInf,

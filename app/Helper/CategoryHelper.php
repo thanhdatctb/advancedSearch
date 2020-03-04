@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryHelper extends ApiHelper
 {
+    use ItemHelper;
     //
     private $storeHelper;
 
@@ -35,7 +36,7 @@ class CategoryHelper extends ApiHelper
 
     private function putAllValueToCategory($categoryData)
     {
-        $category = new \App\Model\Category();
+        $category = new Category();
         $category->setName($categoryData["name"]);
         $category->setId($categoryData["id"]);
         $category->setDescription($categoryData["description"]);
@@ -60,7 +61,7 @@ class CategoryHelper extends ApiHelper
     {
         $categories = $this->viewAll($param);
         foreach ($categories as $category) {
-            $this->insertWithId($param, $category->getId());
+            $this->updateWithId($param, $category->getId());
         }
     }
 
@@ -69,6 +70,20 @@ class CategoryHelper extends ApiHelper
         $category = $this->getById($param, $id);
         DB::table("table_category")->insert([
             "id" => $category->getId(),
+            "title" => $category->getName(),
+            "description" => strip_tags($category->getDescription()),
+            "url" => $category->getUrl(),
+            "image_url" => $category->getImageUrl(),
+            "context" => $param["context"],
+        ]);
+    }
+
+    public function updateWithId($param, $id)
+    {
+        $category = $this->getById($param, $id);
+        DB::table("table_category")
+            ->where("id", $category->getId())
+            ->update([
             "title" => $category->getName(),
             "description" => strip_tags($category->getDescription()),
             "url" => $category->getUrl(),
@@ -100,16 +115,31 @@ class CategoryHelper extends ApiHelper
         return $categories;
     }
 
-    public function searchWithoutRequest($domain, $keyword)
+    public function searchWithoutTag($domain, $keyword)
     {
         $context = MainHelper::getInfData("domain", $domain)["context"];
-        return Category::where([
-            ["context", "=", $context],
-            ["title", "like", "%" . $keyword . "%"]
-        ])
+        return DB::table("table_category")
+            ->where([
+                ["table_category.context", "=", $context],
+                ["table_category.title", "like", "%" . $keyword . "%"]
+            ])
             ->orWhere([
-                ["context", "=", $context],
-                ["description", "like", "%" . $keyword . "%"]
-            ])->get();
+                ["table_category.context", "=", $context],
+                ["table_category.description", "like", "%" . $keyword . "%"]
+            ])
+            ->get();
+    }
+    public function serchWithTag($domain, $keyword)
+    {
+        $context = MainHelper::getInfData("domain", $domain)["context"];
+        return DB::table("table_category")
+            ->join("table_category_tags", "table_category_tags.foreign_id", "=", "table_category.id")
+            ->orWhere([
+                ["table_category_tags.context", "=", $context],
+                ["table_category_tags.tag", "=", $keyword]
+            ])
+            ->select("table_category.*")
+            ->distinct("table_category.id")
+            ->get();
     }
 }
