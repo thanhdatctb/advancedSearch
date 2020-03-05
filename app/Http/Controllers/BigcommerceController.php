@@ -113,6 +113,7 @@ class BigcommerceController extends ApiController
             $request->session()->put('param', $param);
             $this->webhookHelper->createAllWebhook($param);
             $this->scriptHelper->createJqueryScript($param);
+            $this->scriptHelper->createJquerySuggestScript($param);
             $this->scriptHelper->createSearchScript($param);
             $this->resultConfigHelper->addConfigResult($param, 6);
             $this->backUp($request);

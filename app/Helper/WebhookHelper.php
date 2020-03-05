@@ -66,5 +66,4 @@ class WebhookHelper extends ApiHelper
             }
         }
     }
-
 }

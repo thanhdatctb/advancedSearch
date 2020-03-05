@@ -52,7 +52,7 @@
                 <div class="card-body pb-0">
                     <div class="row d-flex align-items-stretch">
                         @foreach($data as $eachData)
-                        <a href="https://{{$domain}}{{$eachData["url"]}}">
+                        <a href="https://{{$domain}}{{$eachData->url}}">
                             <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
                             <div class="card bg-light">
                                 <div class="card-header text-muted border-bottom-0">
@@ -61,11 +61,11 @@
                                 <div class="card-body pt-0">
                                     <div class="row">
                                         <div class="col-7">
-                                            <h2 class="lead"><b>{{$eachData["title"]}}</b></h2>
-                                            <p class="text-muted text-sm"><b>About: </b>{{$eachData["description"]}} </p>
+                                            <h2 class="lead"><b>{{$eachData -> title}}</b></h2>
+                                            <p class="text-muted text-sm"><b>About: </b>{{$eachData->description}} </p>
                                         </div>
                                         <div class="col-5 text-center">
-                                            <img src="{{$eachData["image_url"]}}" alt="" class="img-md img-fluid">
+                                            <img src="{{$eachData->image_url}}" alt="" class="img-md img-fluid">
                                         </div>
                                     </div>
                                 </div>

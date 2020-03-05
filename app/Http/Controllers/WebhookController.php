@@ -14,12 +14,6 @@ class WebhookController extends Controller
         $this->webhookHelper = new WebhookHelper();
     }
 
-    public function test(Request $request)
-    {
-        $webhookHelper = new WebhookHelper($request->session()->get("param"));
-        $webhookHelper->createProductWebhook();
-    }
-
     public function main(Request $request)
     {
         $this->webhookHelper->updateDB($request);

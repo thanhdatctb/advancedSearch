@@ -37,6 +37,13 @@ class ScriptHelper extends ApiHelper
         $this->createScriptWithLink($param, $name, $description, $link);
     }
 
+    public function createJquerySuggestScript($param)
+    {
+        $name = "JquerySuggest";
+        $description = "Jquery Suggest";
+        $link = "https://rawgithub.com/polarblau/suggest/master/src/jquery.suggest.js";
+        $this->createScriptWithLink($param, $name, $description, $link);
+    }
     public function createSearchScript($param)
     {
         $name = "Advanced Search";
