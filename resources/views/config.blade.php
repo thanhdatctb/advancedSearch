@@ -105,7 +105,7 @@
                                 <select class="form-control custom-select" id="productId">
                                     <option selected disabled>Select one</option>
                                     @foreach($products as $product)
-                                        <option value="{{$product->id}}">{{$product->name}}</option>
+                                        <option value="{{$product["id"]}}">{{$product["name"]}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -139,10 +139,11 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="inputStatus">Category</label>
+<!--                                --><?php //dd($categories) ?>
                                 <select class="form-control custom-select" id="categoryId">
                                     <option selected disabled>Select one</option>
                                     @foreach($categories as $category)
-                                        <option value="{{$category->id}}">{{$category->name}}</option>
+                                        <option value="{{$category["id"]}}">{{$category->title}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -175,7 +176,7 @@
                                 <select class="form-control custom-select" id="blogId">
                                     <option selected disabled >Select one</option>
                                     @foreach($blogs as $blog)
-                                        <option value="{{$blog->id}}">{{$blog->title}}</option>
+                                        <option value="{{$blog["id"]}}">{{$blog["title"]}}</option>
                                     @endforeach
                                 </select>
                             </div>

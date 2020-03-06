@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use App\Model\Blog;
 use App\Model\Category;
 use App\Model\Constance;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +33,11 @@ class CategoryHelper extends ApiHelper
 
         }
         return ($categories);
+    }
+
+    public function viewAllFromDb($param)
+    {
+        return Category::where("context", "=", $param["context"])->get();
     }
 
     private function putAllValueToCategory($categoryData)
@@ -84,12 +90,12 @@ class CategoryHelper extends ApiHelper
         DB::table("table_category")
             ->where("id", $category->getId())
             ->update([
-            "title" => $category->getName(),
-            "description" => strip_tags($category->getDescription()),
-            "url" => $category->getUrl(),
-            "image_url" => $category->getImageUrl(),
-            "context" => $param["context"],
-        ]);
+                "title" => $category->getName(),
+                "description" => strip_tags($category->getDescription()),
+                "url" => $category->getUrl(),
+                "image_url" => $category->getImageUrl(),
+                "context" => $param["context"],
+            ]);
     }
 
     public function deleteOldData($param)
@@ -129,6 +135,7 @@ class CategoryHelper extends ApiHelper
             ])
             ->get();
     }
+
     public function serchWithTag($domain, $keyword)
     {
         $context = MainHelper::getInfData("domain", $domain)["context"];

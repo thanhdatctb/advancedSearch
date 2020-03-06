@@ -36,6 +36,12 @@ class ProductHelper extends ApiHelper
         return ($products);
     }
 
+    public function viewAllFromDb($param)
+    {
+        return Product::where("context", '=', $param["context"])->get();
+
+    }
+
     public function backUp($param)
     {
         $products = $this->viewAll($param);
@@ -44,7 +50,7 @@ class ProductHelper extends ApiHelper
         }
     }
 
-    private function insertWithId($param, $id)
+    public function insertWithId($param, $id)
     {
         $product = $this->getById($param, $id);
         try {
@@ -80,6 +86,7 @@ class ProductHelper extends ApiHelper
                 "price" => $product->getPrice()
             ]);
     }
+
 
     public function deleteOldData($param)
     {

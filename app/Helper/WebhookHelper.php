@@ -20,7 +20,6 @@ class WebhookHelper extends ApiHelper
     {
         parent::__construct();
 //        $this->param = $param;
-
         $this->mainHelper = new MainHelper();
         $this->blogHelper = new BlogHelper();
         $this->categoryHelper = new CategoryHelper();
@@ -50,19 +49,23 @@ class WebhookHelper extends ApiHelper
     {
         $id = $request->data["id"];
         $context = $request->producer;
-        $param = $this->mainHelper->getInfData($context);
+        $param = $this->mainHelper->getInfData("context",$context);
         $scopeData = explode("/", $request->scope);
         if ($scopeData[1] == "product") {
             if ($scopeData[2] == "deleted") {
                 DB::table("table_products")->delete($id);
+            } elseif ($scopeData[2] == "created") {
+                $this->productHelper->insertWithId($param, $id);
             } else {
                 $this->productHelper->backUpWithId($param, $id);
             }
         } elseif ($scopeData[1] == "category") {
             if ($scopeData[2] == "deleted") {
                 DB::table("table_category")->delete($id);
-            } else {
+            } elseif ($scopeData[2] == "created") {
                 $this->categoryHelper->insertWithId($param, $id);
+            } else {
+                $this->categoryHelper->updateWithId($param, $id);
             }
         }
     }

@@ -35,6 +35,11 @@ class BlogHelper extends ApiHelper
         return ($blogs);
     }
 
+    public function viewAllFromBd($param)
+    {
+        return Blog::where("context", "=", $param["context"])->get();
+    }
+
     public function getById($param, $id)
     {
         $uri = "api.bigcommerce.com/" . $param["context"] . "/v2/blog/posts/" . $id . ".json";

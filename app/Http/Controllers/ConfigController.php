@@ -33,9 +33,9 @@ class ConfigController extends Controller
         $param = $request->session()->get("param");
         $store = $this->storeHelper->getStoreInfor($param);
         $resultsPerPage = $this->resultConfigHelper->getResultsPerPage($param);
-        $products = $this->productHelper->viewAll($param);
-        $categories = $this->categoryHelper->viewAll($param);
-        $blogs = $this->blogHelper->viewAll($param);
+        $products = $this->productHelper->viewAllFromDb($param);
+        $categories = $this->categoryHelper->viewAllFromDb($param);
+        $blogs = $this->blogHelper->viewAllFromBd($param);
         return view("config", [
             "store" => $store,
             "resultsPerPage" => $resultsPerPage,
